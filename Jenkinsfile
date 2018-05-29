@@ -1,6 +1,6 @@
 def CONTAINER_NAME="getintodevops-hellonode"
 def CONTAINER_TAG="${env.BUILD_NUMBER}"
-
+USERNAME="khzied"
 
 node {
     def app
@@ -20,7 +20,7 @@ node {
 
 
     stage('Image Build'){
-        imageBuild(CONTAINER_NAME, CONTAINER_TAG, khzied)
+        imageBuild(CONTAINER_NAME, CONTAINER_TAG, USERNAME
 }
 
 
