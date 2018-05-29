@@ -11,18 +11,9 @@ node {
         checkout scm
     }
 
-//    stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
-
-//        app = docker.build("khzied/getintodevops-hellonode")
-//    }
-
-
     stage('Image Build'){
         imageBuild(CONTAINER_NAME, CONTAINER_TAG)
 }
-
 
     stage('Push to Docker Registry'){
         withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
@@ -36,6 +27,7 @@ node {
 def imageBuild(containerName, tag){
     //sh "docker build -t $containerName:$tag  -t $containerName --pull --no-cache ."
     sh "docker build -t khzied/$containerName:$tag  -t $containerName --pull --no-cache ."
+    sh "docker build -t khzied/$containerName:$tag  --pull --no-cache ."
     echo "Image build complete"
 }
 
