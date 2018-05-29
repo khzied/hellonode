@@ -1,6 +1,6 @@
 def CONTAINER_NAME="getintodevops-hellonode"
 def CONTAINER_TAG="${env.BUILD_NUMBER}"
-def USERNAME="khzied"
+//def USERNAME="khzied"
 
 node {
     def app
@@ -20,7 +20,8 @@ node {
 
 
     stage('Image Build'){
-        imageBuild(CONTAINER_NAME, CONTAINER_TAG, USERNAME
+        imageBuild(CONTAINER_NAME, CONTAINER_TAG)
+        //imageBuild(CONTAINER_NAME, CONTAINER_TAG, USERNAME)
 }
 
 
@@ -46,15 +47,15 @@ node {
 }
 
 
-def imageBuild(containerName, tag, dockerUser){
-    sh "docker build -t $dockerUser/$containerName:$tag  -t $containerName --pull --no-cache ."
+def imageBuild(containerName, tag){
+    sh "docker build -t $containerName:$tag  -t $containerName --pull --no-cache ."
     echo "Image build complete"
 }
 
 
 def pushToImage(containerName, tag, dockerUser, dockerPassword){
     sh "docker login -u $dockerUser -p $dockerPassword"
- //   sh "docker tag $containerName:$tag $dockerUser/$containerName:$tag"
+    sh "docker tag $containerName:$tag $dockerUser/$containerName:$tag"
     sh "docker push $dockerUser/$containerName:$tag"
     echo "Image push complete"
 }
