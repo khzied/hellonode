@@ -20,18 +20,10 @@ node {
 
 
     stage('Image Build'){
-        imageBuild(CONTAINER_NAME, CONTAINER_TAG)
+        imageBuild(CONTAINER_NAME, CONTAINER_TAG, USERNAME)
 }
 
 
-    stage('Test image') {
-        /* Ideally, we would run a test framework against our image.
-         * For this example, we're using a Volkswagen-type approach ;-) */
-
-        app.inside {
-            sh 'echo "Tests passed"'
-        }
-    }
 
 //    stage('Push image') {
         /* Finally, we'll push the image with two tags:
@@ -48,23 +40,21 @@ node {
     stage('Push to Docker Registry'){
         withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             pushToImage(CONTAINER_NAME, CONTAINER_TAG, USERNAME, PASSWORD)
-
-            sh 'echo "${env.BUILD_NUMBER}"'
         }
 }
 
 }
 
 
-def imageBuild(containerName, tag){
-    sh "docker build -t $containerName:$tag  -t $containerName --pull --no-cache ."
+def imageBuild(containerName, tag, dockerUser){
+    sh "docker build -t $dockerUser/$containerName:$tag  -t $containerName --pull --no-cache ."
     echo "Image build complete"
 }
 
 
 def pushToImage(containerName, tag, dockerUser, dockerPassword){
     sh "docker login -u $dockerUser -p $dockerPassword"
-    sh "docker tag $containerName:$tag $dockerUser/$containerName:$tag"
+ //   sh "docker tag $containerName:$tag $dockerUser/$containerName:$tag"
     sh "docker push $dockerUser/$containerName:$tag"
     echo "Image push complete"
 }
