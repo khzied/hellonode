@@ -11,12 +11,18 @@ node {
         checkout scm
     }
 
-    stage('Build image') {
+//    stage('Build image') {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
-        app = docker.build("khzied/getintodevops-hellonode")
-    }
+//        app = docker.build("khzied/getintodevops-hellonode")
+//    }
+
+
+    stage('Image Build'){
+        imageBuild(CONTAINER_NAME, CONTAINER_TAG)
+}
+
 
     stage('Test image') {
         /* Ideally, we would run a test framework against our image.
@@ -48,6 +54,13 @@ node {
 }
 
 }
+
+
+def imageBuild(containerName, tag){
+    sh "docker build -t $containerName:$tag  -t $containerName --pull --no-cache ."
+    echo "Image build complete"
+}
+
 
 def pushToImage(containerName, tag, dockerUser, dockerPassword){
     sh "docker login -u $dockerUser -p $dockerPassword"
