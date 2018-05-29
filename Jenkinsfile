@@ -26,7 +26,7 @@ node {
 
 def imageBuild(containerName, tag){
     //sh "docker build -t $containerName:$tag  -t $containerName --pull --no-cache ."
-    sh "docker build -t khzied/$containerName:$tag  -t $containerName --pull --no-cache ."
+    //sh "docker build -t khzied/$containerName:$tag  -t $containerName --pull --no-cache ."
     sh "docker build -t khzied/$containerName:$tag  --pull --no-cache ."
     echo "Image build complete"
 }
