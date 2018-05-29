@@ -20,7 +20,7 @@ node {
 
 
     stage('Image Build'){
-        imageBuild(CONTAINER_NAME, CONTAINER_TAG, USERNAME)
+        imageBuild(CONTAINER_NAME, CONTAINER_TAG, khzied)
 }
 
 
