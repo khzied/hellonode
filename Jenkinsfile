@@ -1,6 +1,6 @@
 def CONTAINER_NAME="getintodevops-hellonode"
 def CONTAINER_TAG="${env.BUILD_NUMBER}"
-USERNAME="khzied"
+def USERNAME="khzied"
 
 node {
     def app
