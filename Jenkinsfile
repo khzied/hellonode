@@ -21,22 +21,8 @@ node {
 
     stage('Image Build'){
         imageBuild(CONTAINER_NAME, CONTAINER_TAG)
-        //imageBuild(CONTAINER_NAME, CONTAINER_TAG, USERNAME)
 }
 
-
-
-//    stage('Push image') {
-        /* Finally, we'll push the image with two tags:
-         * First, the incremental build number from Jenkins
-         * Second, the 'latest' tag.
-         * Pushing multiple tags is cheap, as all the layers are reused. */
-//        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-//            app.push("${env.BUILD_NUMBER}")
-//                    sh 'docker push khzied/getintodevops-hellonode:latest'
-//            app.push("latest")
-//        }
-//    }
 
     stage('Push to Docker Registry'){
         withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
@@ -48,14 +34,15 @@ node {
 
 
 def imageBuild(containerName, tag){
-    sh "docker build -t $containerName:$tag  -t $containerName --pull --no-cache ."
+    //sh "docker build -t $containerName:$tag  -t $containerName --pull --no-cache ."
+    sh "docker build -t khzied/$containerName:$tag  -t $containerName --pull --no-cache ."
     echo "Image build complete"
 }
 
 
 def pushToImage(containerName, tag, dockerUser, dockerPassword){
     sh "docker login -u $dockerUser -p $dockerPassword"
-    sh "docker tag $containerName:$tag $dockerUser/$containerName:$tag"
+//    sh "docker tag $containerName:$tag $dockerUser/$containerName:$tag"
     sh "docker push $dockerUser/$containerName:$tag"
     echo "Image push complete"
 }
