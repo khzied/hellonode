@@ -1,5 +1,5 @@
 def CONTAINER_NAME="getintodevops-hellonode"
-def CONTAINER_TAG="latest"
+def CONTAINER_TAG="${env.BUILD_NUMBER}"
 
 
 node {
@@ -17,7 +17,7 @@ node {
 
         app = docker.build("khzied/getintodevops-hellonode")
     }
-/*
+
     stage('Test image') {
         /* Ideally, we would run a test framework against our image.
          * For this example, we're using a Volkswagen-type approach ;-) */
@@ -27,21 +27,23 @@ node {
         }
     }
 
-    stage('Push image') {
+//    stage('Push image') {
         /* Finally, we'll push the image with two tags:
          * First, the incremental build number from Jenkins
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-            app.push("${env.BUILD_NUMBER}")
-                    sh 'docker push khzied/getintodevops-hellonode:latest'
+//        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+//            app.push("${env.BUILD_NUMBER}")
+//                    sh 'docker push khzied/getintodevops-hellonode:latest'
 //            app.push("latest")
-        }
-    }
-    */
+//        }
+//    }
+
     stage('Push to Docker Registry'){
-        withCredentials([usernamePassword(credentialsId: 'dockerHubAccount', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
             pushToImage(CONTAINER_NAME, CONTAINER_TAG, USERNAME, PASSWORD)
+
+            sh 'echo "${env.BUILD_NUMBER}"'
         }
 }
 
